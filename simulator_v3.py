@@ -1224,9 +1224,14 @@ def main():
     print(final_summary)
     print(Fore.CYAN + "==============================================")
 
-    # 실행 경로에 구애받지 않고 항상 스크립트 파일과 동일한 폴더에 저장되도록 설정
+    # 회의록 덮어쓰기 방지를 위해 타임스탬프와 정제된 주제명을 포함한 파일명 생성
+    timestamp = time.strftime("%Y%m%d_%H%M%S")
+    safe_topic = re.sub(r'[^\w\s-]', '', topic).strip()
+    safe_topic = re.sub(r'[\s]+', '_', safe_topic)[:20]
+    filename = f"meeting_minutes_{safe_topic}_{timestamp}.txt" if safe_topic else f"meeting_minutes_{timestamp}.txt"
+    
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    output_file = os.path.join(script_dir, "meeting_minutes.txt")
+    output_file = os.path.join(script_dir, filename)
     with open(output_file, "w", encoding="utf-8") as f:
         f.write(f"가상 팀 회의 시뮬레이터 v3 결과 보고서\n")
         f.write(f"회의 주제: {topic}\n")
